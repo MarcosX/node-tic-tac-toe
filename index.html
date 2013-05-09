@@ -1,0 +1,31 @@
+<html>
+<head>
+  <title>Chattr</title>
+</head>
+<body>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<div id="new_msg"></div>
+
+<textarea rows="5" cols="20" id="msg" placeholder="type in..."></textarea>
+<button id="send_msg">Send</button>
+<script>
+  $(document).ready(function(){
+    var socket = io.connect('http://localhost:8080');
+    $('#send_msg').click(function(e){
+        var message = $('#msg').val();
+        socket.emit('messages', message);
+        insertText(message);
+        $('#msg').val('');
+    })
+    socket.on('messages',function(data){
+      insertText(data)
+    })
+    var insertText = function(text){
+      $('#new_msg').append('<p>'+ text +'</p>');
+    };
+  });
+</script>
+</body>
+</html>

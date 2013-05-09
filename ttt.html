@@ -1,0 +1,44 @@
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+</head>
+<body>
+  <p>
+    <button id="ul">.</button>
+    <button id="uc">.</button>
+    <button id="ur">.</button>
+  </p>
+  <p>
+    <button id="cl">.</button>
+    <button id="cc">.</button>
+    <button id="cr">.</button>
+  </p>
+  <p>
+    <button id="dl">.</button>
+    <button id="dc">.</button>
+    <button id="dr">.</button>
+  </p>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  $(document).ready(function(){
+    var socket = io.connect('http://localhost:8080');
+    $('button').click(function(e){
+      var where = $(this).attr('id')
+      socket.emit('play', where);
+      $(this).text('X')
+      $('button').attr('disabled', 'disabled');
+      console.log('play at ' + $(this).attr('id'));
+    })
+    socket.on('played',function(id){
+      $('#'+id).text('O');
+      $('button').removeAttr('disabled');
+      console.log('Played at ' + id);
+    })
+    socket.on('gameEnded', function(data){
+      console.log('Game Ended');
+    })
+  });
+</script>
+</body>
+</html>
